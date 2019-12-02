@@ -1,5 +1,13 @@
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
+
 import sqlite3
 import json
+import io
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 toparr = []
 midarr = []
@@ -13,10 +21,10 @@ patriot = []
 
 database_filename = 'service.db'
 conn = sqlite3.connect(database_filename)
+conn.text_factory = str
 cs = conn.cursor()
 
 
-# 처음에 테이블만들기
 def makedb():
     query = "DROP TABLE IF EXISTS service;"
     cs.execute(query)
@@ -26,7 +34,6 @@ def makedb():
     cs.execute(query)
 
 
-# 배열에 있는 데이터 디비에 집어넣기
 def insertdb():
     for i in range(len(toparr)):
         query = "INSERT into service (cate_top, cate_mid, cate_low, name, brief, target, content, url, patriot) values (" \
@@ -35,7 +42,6 @@ def insertdb():
     conn.commit()
 
 
-# 잘들갔는지 테스트
 def selectdb():
     query = "SELECT * FROM service;"
     cs.execute(query)
@@ -45,21 +51,20 @@ def selectdb():
     print('select done')
 
 
-# 크롤링한 데이터 배열에 넣기
 def jsontest():
-    with open('\\servicelist.json', encoding='utf-8-sig') as json_file:
+    with io.open('/root/servicelist.json', encoding='utf-8-sig') as json_file:
         json_data = json.load(json_file)
         for i in json_data:
-            toparr.append(str(i['cate_top']))
-            midarr.append(str(i['cate_mid']))
-            lowarr.append(str(i['cate_low']))
-            name.append(str(i['serv_name']))
-            brief.append(str(i['serv_brief']))
-            target.append(str(i['target']))
-            contents.append(str(i['contents']))
-            urls.append(str(i['url']))
+            toparr.append(str(i['cate_top'].encode('utf8')))
+            midarr.append(str(i['cate_mid'].encode('utf8')))
+            lowarr.append(str(i['cate_low'].encode('utf8')))
+            name.append(str(i['serv_name'].encode('utf8')))
+            brief.append(str(i['serv_brief'].encode('utf8')))
+            target.append(str(i['target'].encode('utf8')))
+            contents.append(str(i['contents'].encode('utf8')))
+            urls.append(str(i['url'].encode('utf8')))
             patriot.append(str(i['is_patriot']))
-            # 일단 불린도 스트링으로 받음(sqlite에 불린이 없대)
+
 
 
 def finishdb():
