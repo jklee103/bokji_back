@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-#-*- coding: utf-8 -*-
-
 import sqlite3
 import json
 import io
-import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 toparr = []
 midarr = []
@@ -54,16 +48,16 @@ def selectdb():
 def jsontest():
     with io.open('/root/servicelist.json', encoding='utf-8-sig') as json_file:
         json_data = json.load(json_file)
-        for i in json_data:
-            toparr.append(str(i['cate_top'].encode('utf8')))
-            midarr.append(str(i['cate_mid'].encode('utf8')))
-            lowarr.append(str(i['cate_low'].encode('utf8')))
-            name.append(str(i['serv_name'].encode('utf8')))
-            brief.append(str(i['serv_brief'].encode('utf8')))
-            target.append(str(i['target'].encode('utf8')))
-            contents.append(str(i['contents'].encode('utf8')))
-            urls.append(str(i['url'].encode('utf8')))
-            patriot.append(str(i['is_patriot']))
+        for elem in json_data:
+            toparr.append(elem['cate_top'])
+            midarr.append(elem['cate_mid'])
+            lowarr.append(elem['cate_low'])
+            name.append(elem['serv_name'])
+            brief.append(elem['serv_brief'])
+            target.append(elem['target'])
+            contents.append(elem['contents'])
+            urls.append(elem['url'])
+            patriot.append(elem['is_patriot'])
 
 
 
