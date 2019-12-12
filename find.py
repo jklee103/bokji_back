@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import sqlite3
 import json
 
@@ -21,9 +21,7 @@ def find():
     query = "SELECT * FROM service WHERE cate_mid = ? AND cate_low = ?;"
     cs.execute(query, (cate_mid, cate_low))
     rows = cs.fetchall()
-    for i in rows:
-        print(i)
-    return str(rows)
+    return jsonify(rows)
 
 
 # 되는대로 만든거임
@@ -33,11 +31,9 @@ def findall():
     query = "SELECT * FROM service;"
     cs.execute(query)
     rows = cs.fetchall()
-    for i in rows:
-        print(i)
-    return str(rows)
+    return jsonify(rows)
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-    app.debug = True
+    app.debug = False
