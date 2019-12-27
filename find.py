@@ -70,6 +70,7 @@ def signup():
             "damunhwa, lowsodek) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); "
     cs.execute(query, (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, damunhwa, lowsodek))
     conn.commit()
+    return jsonify({'msg' : '회원가입 완료'}), 200
 
 
 if __name__ == '__main__':
