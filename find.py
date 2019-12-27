@@ -37,6 +37,42 @@ def findall():
                ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
+@app.route("/signin")
+def signin():
+    uid = request.args.get('uid')
+    cs = conn.cursor()
+    query = "SELECT * FROM user WHERE uid = ?;"
+    cs.execute(query, uid)
+    rows = cs.fetchall()
+    return jsonify(rows)
+
+
+@app.route("/signup")
+def signup():
+    uid = request.args.get('uid')
+    name = request.args.get('name')
+    age = request.args.get('age')
+    gender = request.args.get('gender')
+    loc = request.args.get('loc')
+    freg = request.args.get('freg')
+    baby = request.args.get('baby')
+    kid = request.args.get('kid')
+    chung = request.args.get('chung')
+    jung = request.args.get('jung')
+    no = request.args.get('no')
+    handi = request.args.get('handi')
+    hanbumo = request.args.get('hanbumo')
+    damunhwa = request.args.get('damunhwa')
+    lowsodek = request.args.get('lowsodek')
+
+    cs = conn.cursor()
+    query = "INSERT into user (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, " \
+            "damunhwa, lowsodek) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); "
+    cs.execute(query, (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, damunhwa, lowsodek))
+    conn.commit()
+    return jsonify({'msg' : '회원가입 완료'}), 200
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     app.debug = False
