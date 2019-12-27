@@ -65,12 +65,15 @@ def signup():
     damunhwa = request.args.get('damunhwa')
     lowsodek = request.args.get('lowsodek')
 
-    cs = conn.cursor()
-    query = "INSERT into user (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, " \
+    if uid and name and age and gender and loc and freg and baby and kid and chung and jung and no and handi and hanbumo and damunhwa and lowsodek:
+        cs = conn.cursor()
+        query = "INSERT into user (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, " \
             "damunhwa, lowsodek) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); "
-    cs.execute(query, (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, damunhwa, lowsodek))
-    conn.commit()
-    return jsonify({'msg' : '회원가입 완료'}), 200
+        cs.execute(query, (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, damunhwa, lowsodek))
+        conn.commit()
+        return jsonify({'msg' : '회원가입 완료'}), 200
+    else:
+        return jsonify({'err' : '입력값 부족'}),404
 
 
 if __name__ == '__main__':
