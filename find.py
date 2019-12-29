@@ -42,7 +42,7 @@ def signin():
     uid = request.args.get('uid')
     cs = conn.cursor()
     query = "SELECT * FROM user WHERE uid = ?;"
-    cs.execute(query, uid)
+    cs.execute(query, (uid,))
     rows = cs.fetchall()
     return jsonify(rows)
 
