@@ -64,12 +64,13 @@ def signup():
     hanbumo = request.args.get('hanbumo')
     damunhwa = request.args.get('damunhwa')
     lowsodek = request.args.get('lowsodek')
+    bohun = request.args.get('bohun')
 
-    if uid and name and age and gender and loc and freg and baby and kid and chung and jung and no and handi and hanbumo and damunhwa and lowsodek:
+    if uid and name and age and gender and loc and freg and baby and kid and chung and jung and no and handi and hanbumo and damunhwa and lowsodek and bohun:
         cs = conn.cursor()
         query = "INSERT into user (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, " \
-            "damunhwa, lowsodek) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); "
-        cs.execute(query, (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, damunhwa, lowsodek))
+            "damunhwa, lowsodek, bohun) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); "
+        cs.execute(query, (uid, name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, damunhwa, lowsodek, bohun))
         conn.commit()
         return jsonify({'msg' : '회원가입 완료'}), 200
     else:
