@@ -77,6 +77,54 @@ def signup():
         return jsonify({'err' : '입력값 부족'}),404
 
 
+@app.route("/getnoxml")
+def getnoxml():
+    filedir="/root/xmls/no.xml"
+    xml = open(filedir, 'r')
+    data = xml.read()
+    return Response(data, mimetype='text/xml')
+
+
+@app.route("/getbabyxml")
+def getbabyxml():
+    filedir="/root/xmls/baby.xml"
+    xml = open(filedir, 'r')
+    data = xml.read()
+    return Response(data, mimetype='text/xml')
+
+
+@app.route("/getchungxml")
+def getchungxml():
+    filedir="/root/xmls/chung.xml"
+    xml = open(filedir, 'r')
+    data = xml.read()
+    return Response(data, mimetype='text/xml')
+
+
+@app.route("/getjungxml")
+def getjungxml():
+    filedir="/root/xmls/jung.xml"
+    xml = open(filedir, 'r')
+    data = xml.read()
+    return Response(data, mimetype='text/xml')
+
+
+@app.route("/getkidxml")
+def getkidxml():
+    filedir="/root/xmls/kid.xml"
+    xml = open(filedir, 'r')
+    data = xml.read()
+    return Response(data, mimetype='text/xml')
+
+
+@app.route("/getpregxml")
+def getpregxml():
+    filedir="/root/xmls/preg.xml"
+    xml = open(filedir, 'r')
+    data = xml.read()
+    return Response(data, mimetype='text/xml')
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     app.debug = False
