@@ -11,7 +11,7 @@ cs = conn.cursor()
 def makedb():
     query = "DROP TABLE IF EXISTS user;"
     cs.execute(query)
-    query = "CREATE TABLE user (uid integer primary key, name VARCHAR(20), age integer, " \
+    query = "CREATE TABLE user (uid VARCHAR(40) primary key, name VARCHAR(20), age integer, " \
             "gender integer, loc VARCHAR(255), freg integer, baby integer, kid integer, " \
             "chung integer, jung integer, no integer, handi integer, hanbumo integer, damunhwa integer, " \
             "lowsodek integer, bohun integer); "
