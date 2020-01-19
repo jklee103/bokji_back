@@ -77,6 +77,36 @@ def signup():
         return jsonify({'err' : '입력값 부족'}),404
 
 
+@app.route("/modusr")
+def modusr():
+    uid = request.args.get('uid')
+    name = request.args.get('name')
+    age = request.args.get('age')
+    gender = request.args.get('gender')
+    loc = request.args.get('loc')
+    freg = request.args.get('freg')
+    baby = request.args.get('baby')
+    kid = request.args.get('kid')
+    chung = request.args.get('chung')
+    jung = request.args.get('jung')
+    no = request.args.get('no')
+    handi = request.args.get('handi')
+    hanbumo = request.args.get('hanbumo')
+    damunhwa = request.args.get('damunhwa')
+    lowsodek = request.args.get('lowsodek')
+    bohun = request.args.get('bohun')
+
+    if uid and name and age and gender and loc and freg and baby and kid and chung and jung and no and handi and hanbumo and damunhwa and lowsodek and bohun:
+        cs = conn.cursor()
+        query = "UPDATE user SET name = ?, age = ?, gender = ?, loc = ?, freg = ?, baby = ?, kid = ?, chung = ?, jung = ?, no = ?, handi = ?, hanbumo = ?, " \
+            "damunhwa = ?, lowsodek = ?, bohun = ? WHERE uid = ?; "
+        cs.execute(query, (name, age, gender, loc, freg, baby, kid, chung, jung, no, handi, hanbumo, damunhwa, lowsodek, bohun, uid))
+        conn.commit()
+        return jsonify({'msg' : '수정 완료'}), 200
+    else:
+        return jsonify({'err' : '입력값 부족'}),404
+
+
 @app.route("/getnoxml")
 def getnoxml():
     filedir="/root/xmls/no.xml"
