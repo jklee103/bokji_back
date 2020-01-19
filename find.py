@@ -125,6 +125,17 @@ def getpregxml():
     return Response(data, mimetype='text/xml')
 
 
+@app.route("/findinq")
+def findinq():
+    cate_mid = request.args.get('catemid')
+    cs = conn.cursor()
+    query = "SELECT * FROM inq WHERE cate_mid = ? ORDER BY inqnum DESC;"
+    cs.execute(query, (cate_mid,))
+    rows = cs.fetchall()
+    return Response(json.dumps({'result': [str(row) for row in rows]},
+               ensure_ascii=False), mimetype='application/json; charset=utf-8')
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     app.debug = False
