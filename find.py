@@ -26,6 +26,17 @@ def find():
                ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
+@app.route("/findbyname")
+def findbyname():
+    name = request.args.get('name')
+    cs = conn.cursor()
+    query = "SELECT * FROM service WHERE name = ? ORDER BY ROWID ASC LIMIT 1;"
+    cs.execute(query, (name,))
+    rows = cs.fetchall()
+    return Response(json.dumps({'result': [str(row) for row in rows]},
+               ensure_ascii=False), mimetype='application/json; charset=utf-8')
+
+
 # 되는대로 만든거임
 @app.route("/findall")
 def findall():
