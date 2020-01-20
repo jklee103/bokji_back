@@ -11,7 +11,7 @@ cs = conn.cursor()
 def makedb():
     query = "DROP TABLE IF EXISTS rating;"
     cs.execute(query)
-    query = "CREATE TABLE rating (uid VARCHAR(40) primary key, name VARCHAR(255), rate integer); "
+    query = "CREATE TABLE rating (uid VARCHAR(40), name VARCHAR(255), rate integer, primary key(uid, name)); "
     cs.execute(query)
 
 
