@@ -177,6 +177,18 @@ def findinq():
                ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
+@app.route("/addrating")
+def addrating():
+    cate_mid = request.args.get('')
+    cs = conn.cursor()
+    query = "UPDATE rating SET "  
+    #add on duplicate to query
+    cs.execute(query, (uid, name, rate))
+    rows = cs.fetchall()
+    return Response(json.dumps({'result': [str(row) for row in rows]},
+               ensure_ascii=False), mimetype='application/json; charset=utf-8')
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     app.debug = False
