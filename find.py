@@ -173,8 +173,7 @@ def findinq():
     query = "SELECT * FROM inq WHERE cate_mid = ? ORDER BY inqnum DESC;"
     cs.execute(query, (cate_mid,))
     rows = cs.fetchall()
-    return json.dumps({'result': [jsonify(row) for row in rows]},
-               ensure_ascii=False), 200
+    return jsonify({'result': [jsonify(row) for row in rows]}), 200
 
 
 @app.route("/addrating")
