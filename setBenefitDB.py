@@ -21,7 +21,7 @@ def makedb():
     query = "DROP TABLE IF EXISTS benefit;"
     cs.execute(query)
     query = "CREATE TABLE benefit (id VARCHAR(20), name VARCHAR(255), benefit integer, ageint integer, " \
-            "jang integer, bo integer, primary key(ageint, jang, bo)); "
+            "jang integer, bo integer, primary key(id, ageint, jang, bo)); "
     cs.execute(query)
 
 
@@ -43,7 +43,7 @@ def selectdb():
 
 
 def jsontest():
-    with io.open('/root/no_bo.json', encoding='utf-8-sig') as json_file:
+    with io.open('/root/baby_x.json', encoding='utf-8-sig') as json_file:
         json_data = json.load(json_file)
         for elem in json_data:
             id.append(elem['servid'])
