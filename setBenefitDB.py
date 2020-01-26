@@ -20,8 +20,8 @@ bo = 0
 def makedb():
     query = "DROP TABLE IF EXISTS benefit;"
     cs.execute(query)
-    query = "CREATE TABLE benefit (id VARCHAR(20) primary key, name VARCHAR(255), benefit integer, ageint integer, " \
-            "jang integer, bo integer); "
+    query = "CREATE TABLE benefit (id VARCHAR(20), name VARCHAR(255), benefit integer, ageint integer, " \
+            "jang integer, bo integer, primary key(ageint, jang, bo)); "
     cs.execute(query)
 
 
