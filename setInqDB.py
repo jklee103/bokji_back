@@ -2,7 +2,7 @@ import sqlite3
 import json
 import io
 
-
+#대분류, 중분류, 서비스명, 요약, 조회수 컬럼이 있는 DB생성코드
 toparr = []
 midarr = []
 name = []
