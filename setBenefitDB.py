@@ -12,9 +12,9 @@ conn = sqlite3.connect(database_filename)
 conn.text_factory = str
 cs = conn.cursor()
 
-age = 1
+age = 6
 jang = 0
-bo = 0
+bo = 1
 
 #영유아-1 아동-2 청소년-3 청년-4 중장년-5 노인-6
 def makedb():
@@ -43,7 +43,7 @@ def selectdb():
 
 
 def jsontest():
-    with io.open('/root/baby_x.json', encoding='utf-8-sig') as json_file:
+    with io.open('/root/no_bo.json', encoding='utf-8-sig') as json_file:
         json_data = json.load(json_file)
         for elem in json_data:
             id.append(elem['servid'])
@@ -58,6 +58,5 @@ def finishdb():
 
 if __name__ == '__main__':
     jsontest()
-    makedb()
     insertdb()
     finishdb()
