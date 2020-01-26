@@ -1,4 +1,7 @@
 import sqlite3
+import json
+import io
+
 # uid, 서비스명, 평점(uid와 서비스명이 기본키)
 
 uid = []
