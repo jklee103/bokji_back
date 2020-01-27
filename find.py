@@ -190,6 +190,19 @@ def addrating():
                ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
+@app.route("/findbenefit")
+def findbenefit():
+    ageint = request.args.get('ageint')
+    jang = request.args.get('jang')
+    bo = request.args.get('bo')
+    cs = conn.cursor()
+    query = "SELECT * FROM service INNER JOIN benefit ON service.name = benefit.name WHERE ageint = ? AND jang = ? AND bo = ?;"
+    cs.execute(query, (ageint, jang, bo))
+    rows = cs.fetchall()
+    return Response(json.dumps({'result': [str(row) for row in rows]},
+               ensure_ascii=False), mimetype='application/json; charset=utf-8')
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     app.debug = False
