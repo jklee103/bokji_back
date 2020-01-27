@@ -203,6 +203,34 @@ def findbenefit():
                ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
+#추천돌리기전에 json받는거
+@app.route("/putjson")
+def putjson():
+    uid = []
+    name = []
+    rate = []
+    request.on_json_loading_failed = on_json_loading_failed_return_dict
+    data = request.get_json()
+    for elem in data:
+        uid.append(elem['name'])
+        name.append(elem['servnm'])
+        rate.append(elem['rate'])
+
+    cs = conn.cursor()
+
+    #키확인후 추가/변경
+    for i in range(len(uid)):
+        query = "INSERT INTO  rating (uid, name, rate) VALUES (?,?,?) ON DUPLICATE KEY UPDATE rate = ?;"
+        cs.execute(query, (uid[i], name[i], rate[i], rate[i]))
+        
+    conn.commit()
+
+
+#빈값받으면 딕셔너리만들려고
+def on_json_loading_failed_return_dict(e):
+    return {}
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     app.debug = False
