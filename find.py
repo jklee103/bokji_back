@@ -1,12 +1,25 @@
 from flask import Flask, request, jsonify, Response
 import sqlite3
 import json
+import pandas as pd
+import scipy as sp
+import numpy as np
+import surprise
+from surprise.model_selection import cross_validate
+import warnings
+warnings.filterwarnings('ignore')
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII']=False
 database_filename = 'service.db'
 conn = sqlite3.connect(database_filename, check_same_thread=False)
 
+name_list = []  # 서비스명
+cos_set = set()  # 서비스 id
+cos_list = list(cos_set)
+option = {'name': 'pearson', 'shrinkage': 90}
+algo = surprise.KNNBasic(sim_options=option)
+data = pd.read_csv()
 
 @app.route('/')
 def index():
@@ -210,6 +223,7 @@ def putjson():
     name = []
     rate = []
     request.on_json_loading_failed = on_json_loading_failed_return_dict
+    #json받아서 DB에 넣기
     data = request.get_json()
     for elem in data:
         uid.append(elem['name'])
@@ -218,17 +232,122 @@ def putjson():
 
     cs = conn.cursor()
 
-    #키확인후 추가/변경
+    #추가할지변경할지
     for i in range(len(uid)):
-        query = "INSERT INTO  rating (uid, name, rate) VALUES (?,?,?) ON DUPLICATE KEY UPDATE rate = ?;"
+        query = "INSERT INTO rating (uid, name, rate) VALUES (?,?,?) ON DUPLICATE KEY UPDATE rate = ?;"
         cs.execute(query, (uid[i], name[i], rate[i], rate[i]))
-        
+
     conn.commit()
 
+    getcsv()
+    learning()
 
-#빈값받으면 딕셔너리만들려고
+
+#빈값방지
 def on_json_loading_failed_return_dict(e):
     return {}
+
+
+#디비에서 csv만들기
+def getcsv():
+    cs = conn.cursor()
+    query = "SELECT * FROM rating;"
+    data = cs.execute(query)
+    with open('output.csv', 'wb') as f:
+        writer = csv.writer(f)
+        writer.writerow(['name', 'age', 'servnm', 'rate'])
+        writer.writerows(data)
+
+
+# 딕셔너리 생성
+def recur_dictify(frame):
+    if len(frame.columns) == 1:
+        if frame.values.size == 1:
+            return frame.values[0][0]
+        return frame.values.squeeze()
+    grouped = frame.groupby(frame.columns[0])
+    d = {k: recur_dictify(g.ix[:, 1:]) for k, g in grouped}
+    return d
+
+
+def learning():
+    global data, algo, name_list, cos_set, cos_list, option
+    data = pd.read_csv('output.csv', engine='python')
+    df = data[['name', 'servnm', 'rate']]
+    df_to_dict = recur_dictify(df)
+
+    for user_key in df_to_dict:
+        name_list.append(user_key)
+
+        for cos_key in df_to_dict[user_key]:
+            cos_set.add(cos_key)
+
+    cos_list = list(cos_set)
+    rating_dic = {
+        'name': [],
+        'servnm': [],
+        'rate': []
+    }
+
+    for name_key in df_to_dict:
+        for cos_key in df_to_dict[name_key]:
+            a1 = name_list.index(name_key)
+            a2 = cos_list.index(cos_key)
+            a3 = df_to_dict[name_key][cos_key]
+
+            rating_dic['name'].append(a1)
+            rating_dic['servnm'].append(a2)
+            rating_dic['rate'].append(a3)
+
+    df = pd.DataFrame(rating_dic)
+
+    reader = surprise.Reader(rating_scale=(1, 5))  # 평점 범위 : 1~5
+    col_list = ['name', 'servnm', 'rate']
+    data = surprise.Dataset.load_from_df(df[col_list], reader)
+
+    trainset = data.build_full_trainset()
+    # option = {'name': 'pearson', 'shrinkage': 90}
+    # algo = surprise.KNNBasic(sim_options=option)
+
+    # cross_validate(algo, data)["test_mae"].mean()
+
+    algo.fit(trainset)
+
+
+@app.route("/getrecommend")
+def getrecommend():
+    global data, algo, name_list, cos_set, cos_list, option
+
+    # 서비스 추천받기
+    who = request.args.get('uid')
+    result_list = []
+    count = 0
+
+    index = name_list.index(who)
+
+    result = algo.get_neighbors(index, k=3)
+
+    #servid는 서비스명 담고있음
+    for r1 in result:
+        max_rating = data.df[data.df["name"] == r1]["rate"].max()
+        serv_id = data.df[((data.df["rate"] == max_rating) | (data.df["rate"] == max_rating - 1)) & (data.df["name"] == r1)][
+            "servnm"].values
+
+        for serv_item in serv_id:
+            if (len(result_list)) > 0:
+                for i in range(len(result_list)):
+                    if cos_list[serv_item] == result_list[i]:
+                        count = count + 1
+                if count == 0:
+                    result_list.append(cos_list[serv_item])
+                count = 0
+
+            elif (len(result_list)) == 0:
+                result_list.append(cos_list[serv_item])
+
+    #print(result_list)
+    return Response(json.dumps({'result': [str(row) for row in result_list]},
+                        ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
 if __name__ == '__main__':
