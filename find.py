@@ -212,7 +212,7 @@ def findbenefit():
     jang = request.args.get('jang')
     bo = request.args.get('bo')
     cs = conn.cursor()
-    query = "SELECT service.name, service.brief, benefit.benefit FROM service INNER JOIN benefit ON service.name = benefit.name WHERE ageint = ? AND jang = ? AND bo = ?;"
+    query = "SELECT DISTINCT service.name, service.brief, benefit.benefit FROM service INNER JOIN benefit ON service.name = benefit.name WHERE ageint = ? AND jang = ? AND bo = ?;"
     cs.execute(query, (ageint, jang, bo))
     rows = cs.fetchall()
     
