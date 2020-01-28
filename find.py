@@ -273,7 +273,7 @@ def getcsv():
     cs = conn.cursor()
     query = "SELECT * FROM rating;"
     data = cs.execute(query)
-    with open('output.csv', 'wb') as f:
+    with open('output.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['name', 'age', 'servnm', 'rate'])
         writer.writerows(data)
