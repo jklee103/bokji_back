@@ -236,8 +236,9 @@ def putjson():
 
     #추가할지변경할지
     for i in range(len(uid)):
-        query = "INSERT INTO rating (uid, name, rate) VALUES (?,?,?) ON DUPLICATE KEY UPDATE rate = ?;"
-        cs.execute(query, (uid[i], name[i], rate[i], rate[i]))
+        rr = rate[i]
+        query = "INSERT INTO rating (uid, name, rate) VALUES (?,?,?) ON DUPLICATE KEY UPDATE rate = "+ rr + ";"
+        cs.execute(query, (uid[i], name[i], rate[i]))
 
     conn.commit()
 
