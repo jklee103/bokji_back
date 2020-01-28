@@ -19,7 +19,7 @@ cos_set = set()  # 서비스 id
 cos_list = list(cos_set)
 option = {'name': 'pearson', 'shrinkage': 90}
 algo = surprise.KNNBasic(sim_options=option)
-data = pd.read_csv()
+data = pd.read_csv('life.csv', engine='python')
 
 @app.route('/')
 def index():
