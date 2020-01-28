@@ -212,7 +212,7 @@ def findbenefit():
     jang = request.args.get('jang')
     bo = request.args.get('bo')
     cs = conn.cursor()
-    query = "SELECT * FROM service INNER JOIN benefit ON service.name = benefit.name WHERE ageint = ? AND jang = ? AND bo = ?;"
+    query = "SELECT service.name, service.brief, benefit.benefit FROM service INNER JOIN benefit ON service.name = benefit.name WHERE ageint = ? AND jang = ? AND bo = ?;"
     cs.execute(query, (ageint, jang, bo))
     rows = cs.fetchall()
     
@@ -220,13 +220,9 @@ def findbenefit():
     outfile.write('<mydata>\n')
     for row in rows:
         outfile.write('  <row>\n')
-        outfile.write('    <pk>%s</pk>\n' % row[0])
-        outfile.write('    <id>%s</id>\n' % row[1])
-        outfile.write('    <name>%s</name>\n' % row[2])
-        outfile.write('    <benefit>%s</benefit>\n' % row[3])
-        outfile.write('    <ageint>%s</ageint>\n' % row[4])
-        outfile.write('    <jang>%s</jang>\n' % row[5])
-        outfile.write('    <bo>%s</bo>\n' % row[6])
+        outfile.write('    <name>%s</name>\n' % row[0])
+        outfile.write('    <brief>%s</brief>\n' % row[1])
+        outfile.write('    <benefit>%s</benefit>\n' % row[2])
         outfile.write('  </row>\n')
     outfile.write('</mydata>\n')
     outfile.close()
