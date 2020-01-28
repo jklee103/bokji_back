@@ -323,7 +323,7 @@ def learning():
 
     reader = surprise.Reader(rating_scale=(1, 5))  # 평점 범위 : 1~5
     col_list = ['name', 'servnm', 'rate']
-    data = surprise.Dataset.load_from_df(df[col_list], reader)
+    data = surprise.Dataset.load_from_df(df[[col_list]], reader)
 
     trainset = data.build_full_trainset()
     # option = {'name': 'pearson', 'shrinkage': 90}
