@@ -206,6 +206,8 @@ def addrating():
 
 @app.route("/findbenefit")
 def findbenefit():
+    outfile = open('return.xml', 'w')
+    
     ageint = request.args.get('ageint')
     jang = request.args.get('jang')
     bo = request.args.get('bo')
@@ -213,8 +215,25 @@ def findbenefit():
     query = "SELECT * FROM service INNER JOIN benefit ON service.name = benefit.name WHERE ageint = ? AND jang = ? AND bo = ?;"
     cs.execute(query, (ageint, jang, bo))
     rows = cs.fetchall()
-    return Response(json.dumps({'result': [str(row) for row in rows]},
-               ensure_ascii=False), mimetype='application/json; charset=utf-8')
+    
+    outfile.write('<?xml version="1.0" ?>\n')
+    outfile.write('<mydata>\n')
+    for row in rows:
+        outfile.write('  <row>\n')
+        outfile.write('    <pk>%s</pk>\n' % row[0])
+        outfile.write('    <id>%s</id>\n' % row[1])
+        outfile.write('    <name>%s</name>\n' % row[2])
+        outfile.write('    <benefit>%s</benefit>\n' % row[3])
+        outfile.write('    <ageint>%s</ageint>\n' % row[4])
+        outfile.write('    <jang>%s</jang>\n' % row[5])
+        outfile.write('    <bo>%s</bo>\n' % row[6])
+        outfile.write('  </row>\n')
+    outfile.write('</mydata>\n')
+    outfile.close()
+
+    xml = open('return.xml', 'r')
+    data = xml.read()
+    return Response(data, mimetype='text/xml')
 
 
 #추천돌리기전에 json받는거
