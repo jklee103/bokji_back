@@ -217,18 +217,19 @@ def findbenefit():
 
 
 #추천돌리기전에 json받는거
-@app.route("/putjson")
+@app.route("/putjson", methods=['GET','POST'])
 def putjson():
-    uid = []
-    name = []
-    rate = []
-    request.on_json_loading_failed = on_json_loading_failed_return_dict
+    if request.method == 'POST':
+        uid = []
+        name = []
+        rate = []
+        request.on_json_loading_failed = on_json_loading_failed_return_dict
     #json받아서 DB에 넣기
-    data = request.get_json()
-    for elem in data:
-        uid.append(elem['name'])
-        name.append(elem['servnm'])
-        rate.append(elem['rate'])
+        data = request.get_json()
+        for elem in data:
+            uid.append(elem['name'])
+            name.append(elem['servnm'])
+            rate.append(elem['rate'])
 
     cs = conn.cursor()
 
