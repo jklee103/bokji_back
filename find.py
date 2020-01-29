@@ -262,7 +262,7 @@ def putjson():
     getcsv()
     learning()
     
-    return Response(json.dumps({'msg' : '학습 완료'},
+    return Response(json.dumps([{'msg' : '학습 완료'}],
                ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
