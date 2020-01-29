@@ -295,7 +295,7 @@ def recur_dictify(frame):
 
 def learning():
     global data, algo, name_list, cos_set, cos_list, option
-    data = pd.read_csv('life2.csv', engine='python')
+    data = pd.read_csv('output.csv', engine='python')
     df = data[['name', 'servnm', 'rate']]
     df_to_dict = recur_dictify(df)
 
