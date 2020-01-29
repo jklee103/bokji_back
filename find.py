@@ -261,6 +261,8 @@ def putjson():
 
     getcsv()
     learning()
+    
+    return jsonify({'msg' : '학습 완료'}), 200
 
 
 #빈값방지
@@ -275,7 +277,7 @@ def getcsv():
     data = cs.execute(query)
     with open('output.csv', 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['name', 'age', 'servnm', 'rate'])
+        writer.writerow(['name', 'servnm', 'rate'])
         writer.writerows(data)
 
 
@@ -331,7 +333,6 @@ def learning():
 
     algo.fit(trainset)
 
-    return jsonify({'msg' : '학습 완료'}), 200
 
 
 @app.route("/getrecommend")
