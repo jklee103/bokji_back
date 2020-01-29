@@ -6,7 +6,7 @@ import scipy as sp
 import numpy as np
 import surprise
 import csv
-from surprise.model_selection import cross_validate
+from surprise import Dataset, Reader
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -196,7 +196,7 @@ def findinq():
 def addrating():
     cate_mid = request.args.get('')
     cs = conn.cursor()
-    query = "UPDATE rating SET "  
+    query = "UPDATE rating SET "
     #add on duplicate to query
     cs.execute(query, (uid, name, rate))
     rows = cs.fetchall()
@@ -207,7 +207,7 @@ def addrating():
 @app.route("/findbenefit")
 def findbenefit():
     outfile = open('return.xml', 'w')
-    
+
     ageint = request.args.get('ageint')
     jang = request.args.get('jang')
     bo = request.args.get('bo')
@@ -215,7 +215,7 @@ def findbenefit():
     query = "SELECT DISTINCT service.name, service.brief, benefit.benefit FROM service INNER JOIN benefit ON service.name = benefit.name WHERE ageint = ? AND jang = ? AND bo = ?;"
     cs.execute(query, (ageint, jang, bo))
     rows = cs.fetchall()
-    
+
     outfile.write('<?xml version="1.0" ?>\n')
     outfile.write('<mydata>\n')
     for row in rows:
@@ -292,7 +292,7 @@ def recur_dictify(frame):
 
 def learning():
     global data, algo, name_list, cos_set, cos_list, option
-    data = pd.read_csv('output.csv', engine='python')
+    data = pd.read_csv('life2.csv', engine='python')
     df = data[['name', 'servnm', 'rate']]
     df_to_dict = recur_dictify(df)
 
@@ -320,11 +320,9 @@ def learning():
             rating_dic['rate'].append(a3)
 
     df = pd.DataFrame(rating_dic)
-
-    reader = surprise.Reader(rating_scale=(1, 5))  # 평점 범위 : 1~5
+    reader = Reader(rating_scale=(1, 5))  # 평점 범위 : 1~5
     col_list = ['name', 'servnm', 'rate']
-    data = surprise.Dataset.load_from_df(df[[col_list]], reader)
-
+    data = Dataset.load_from_df(df[col_list], reader)
     trainset = data.build_full_trainset()
     # option = {'name': 'pearson', 'shrinkage': 90}
     # algo = surprise.KNNBasic(sim_options=option)
@@ -332,6 +330,8 @@ def learning():
     # cross_validate(algo, data)["test_mae"].mean()
 
     algo.fit(trainset)
+
+    return 'learning complete'
 
 
 @app.route("/getrecommend")
