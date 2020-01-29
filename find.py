@@ -262,7 +262,8 @@ def putjson():
     getcsv()
     learning()
     
-    return jsonify({'msg' : '학습 완료'}), 200
+    return Response(json.dumps({'msg' : '학습 완료'},
+               ensure_ascii=False), mimetype='application/json; charset=utf-8')
 
 
 #빈값방지
