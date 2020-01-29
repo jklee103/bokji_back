@@ -331,7 +331,7 @@ def learning():
 
     algo.fit(trainset)
 
-    return 'learning complete'
+    return jsonify({'msg' : '학습 완료'}), 200
 
 
 @app.route("/getrecommend")
